@@ -1,3 +1,4 @@
+using Demo.BLL.Services;
 using Demo.DAL.Data.Contexts;
 using Demo.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ namespace Demo.PL
 
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
             #endregion
 

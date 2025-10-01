@@ -4,31 +4,57 @@ using Demo.DAL.Data.Contexts;
 namespace Demo.DAL.Repositories
 {
     //Primary Constructor .Net 8 Feature
-    internal class DepartmentRepository(ApplicationDbContext context) // High Lever Model
+    internal class DepartmentRepository(ApplicationDbContext _context) // High Lever Model
     {
 
 
         // == CRUD
         //ApplicationDbContext _context = new ApplicationDbContext(); // Low Level Model
-        readonly ApplicationDbContext _context = context;
+        //readonly ApplicationDbContext _context = context;
         // public DepartmentRepository(ApplicationDbContext context)
         // {//Ask clr to inject Object From ApplicationDbContext
         //     _context = context;
         // }
+
         // Get Department by Id
-        public Department? GetById(int id )
+        public Department? GetById(int id)
         {
             var department = _context.Departments.Find(id);
             return department;
         }
-        // Get All Departments
-        // Add Department
-        // Update Department
-        // Delete Department
 
-        public DepartmentRepository()
+        // Get All Departments
+        public IEnumerable<Department> GetAll(bool withTracking = false) 
         {
-            ApplicationDbContext context = new ApplicationDbContext();  // Error
+            if (withTracking) 
+                return _context.Departments.ToList();
+
+            return _context.Departments.AsNoTracking().ToList();
         }
+
+        // Add Department
+        public int Add(Department department)
+        {
+            _context.Departments.Add(department);
+            return _context.SaveChanges();
+        }
+
+        // Update Department
+        public int Update(Department department)
+        {
+            _context.Departments.Update(department);
+            return _context.SaveChanges();
+        }
+
+        // Delete Department
+        public int Remove(Department department) { 
+            _context.Departments.Remove(department);
+            return _context.SaveChanges();
+        }
+
+        //public DepartmentRepository()
+        //{
+        //    ApplicationDbContext context = new ApplicationDbContext();  // Error
+        //}
     }
 }

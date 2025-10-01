@@ -4,7 +4,7 @@ using Demo.DAL.Data.Contexts;
 namespace Demo.DAL.Repositories
 {
     //Primary Constructor .Net 8 Feature
-    internal class DepartmentRepository(ApplicationDbContext _context) // High Lever Model
+    public class DepartmentRepository(ApplicationDbContext _context) : IDepartmentRepository// High Lever Model
     {
 
 

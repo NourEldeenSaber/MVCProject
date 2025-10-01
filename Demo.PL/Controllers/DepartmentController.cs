@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Demo.BLL;
+using Demo.BLL.Services;
 namespace Demo.PL.Controllers
 {
     public class DepartmentController : Controller

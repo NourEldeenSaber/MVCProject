@@ -1,4 +1,5 @@
 using Demo.DAL.Data.Contexts;
+using Demo.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.PL
@@ -23,9 +24,11 @@ namespace Demo.PL
                 //var conString = builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"];
                 var conString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-                options.UseSqlServer();
+                options.UseSqlServer(conString);
             });
-            
+
+
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
             #endregion
 

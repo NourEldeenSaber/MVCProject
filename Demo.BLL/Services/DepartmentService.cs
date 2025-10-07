@@ -2,7 +2,7 @@
 using Demo.BLL.Factories;
 using Demo.DAL.Data.Contexts;
 using Demo.DAL.Models;
-using Demo.DAL.Repositories;
+using Demo.DAL.Repositories.Interfaces;
 using System.Transactions;
 
 namespace Demo.BLL.Services

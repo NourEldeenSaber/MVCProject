@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Demo.BLL.Services;
 using Demo.BLL.DTOs;
+using Demo.DAL.Models;
+using Demo.PL.ViewModels.DepartmentViewModels;
 
 namespace Demo.PL.Controllers
 {
@@ -85,6 +87,51 @@ namespace Demo.PL.Controllers
 
         }
 
+        #endregion
+
+        #region Edit
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (!id.HasValue) return BadRequest();
+
+            var department = _departmentService.GetById(id.Value); // DepartmentDetailsDto                                                                   
+            if(department is null) return NotFound();
+
+            var deptViewModel = new DepartmentEditViewModel()
+            {
+                Id = id.Value,
+                Name = department.Name,
+                Code = department.Code,
+                DateOfCreation = department.DateOfCreation,
+                Description = department.Description
+            }; 
+
+            return View(deptViewModel); 
+        }
+
+        [HttpPost]
+        public IActionResult Edit([FromRoute] int id , DepartmentEditViewModel viewModel)
+        {
+            if (!ModelState.IsValid) return View(viewModel);
+            try
+            {
+                var updateDeptDto = new UpdateDepartmentDto() { 
+                    Id = id,
+                    Name = viewModel.Name,
+                    Code = viewModel.Code,
+                    DateOfCreation = viewModel.DateOfCreation,
+                    Description = viewModel.Description
+                };
+               var res = _departmentService.UpdateDepartment(updateDeptDto);
+                if (res > 0) return RedirectToAction(nameof(Index));
+                return View(viewModel);
+            }
+            catch (Exception ex) {
+                return View(viewModel);
+            }
+        }
         #endregion
     }
 }

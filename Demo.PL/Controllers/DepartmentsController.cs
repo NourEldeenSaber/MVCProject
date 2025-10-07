@@ -3,10 +3,11 @@ using Demo.BLL.Services;
 using Demo.BLL.DTOs;
 using Demo.DAL.Models;
 using Demo.PL.ViewModels.DepartmentViewModels;
+using Demo.PL.ViewModels;
 
 namespace Demo.PL.Controllers
 {
-    public class DepartmentsController(IDepartmentService _departmentService , ILogger<HomeController> logger,IWebHostEnvironment _environment) : Controller
+    public class DepartmentsController(IDepartmentService _departmentService , ILogger<HomeController> _logger,IWebHostEnvironment _environment) : Controller
     {
         // DepartmentService departmentService used Across All Actions
         // EmployeeService --> Assign Manager : this Service Needed Only For One Action
@@ -14,14 +15,17 @@ namespace Demo.PL.Controllers
         //{
         //} // Ask Clr To Create Object from [DepartmentService]
 
+        #region Index
 
         // BaseUrl/Departments/Index
         [HttpGet]
         public IActionResult Index()
         {
             var departments = _departmentService.GetAllDepartments();
-            return View(departments); 
-        }
+            return View(departments);
+        } 
+
+        #endregion
 
         #region Create
 
@@ -91,25 +95,25 @@ namespace Demo.PL.Controllers
 
         #region Edit
 
-        [HttpGet]
-        public IActionResult Edit(int? id)
-        {
-            if (!id.HasValue) return BadRequest();
+        //[HttpGet]
+        //public IActionResult Edit(int? id)
+        //{
+        //    if (!id.HasValue) return BadRequest();
 
-            var department = _departmentService.GetById(id.Value); // DepartmentDetailsDto                                                                   
-            if(department is null) return NotFound();
+        //    var department = _departmentService.GetById(id.Value); // DepartmentDetailsDto                                                                   
+        //    if(department is null) return NotFound();
 
-            var deptViewModel = new DepartmentEditViewModel()
-            {
-                Id = id.Value,
-                Name = department.Name,
-                Code = department.Code,
-                DateOfCreation = department.DateOfCreation,
-                Description = department.Description
-            }; 
+        //    var deptViewModel = new DepartmentEditViewModel()
+        //    {
+        //        Id = id.Value,
+        //        Name = department.Name,
+        //        Code = department.Code,
+        //        DateOfCreation = department.DateOfCreation,
+        //        Description = department.Description
+        //    }; 
 
-            return View(deptViewModel); 
-        }
+        //    return View(deptViewModel); 
+        //}
 
         [HttpPost]
         public IActionResult Edit([FromRoute] int id , DepartmentEditViewModel viewModel)
@@ -128,10 +132,72 @@ namespace Demo.PL.Controllers
                 if (res > 0) return RedirectToAction(nameof(Index));
                 return View(viewModel);
             }
-            catch (Exception ex) {
-                return View(viewModel);
+            catch (Exception ex)
+            {
+                // Log Exception
+                if (_environment.IsDevelopment())
+                {
+                    //1)Development => log error in Console And Return The Same View with error message 
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(viewModel);
+                }
+                else
+                {
+                    //2)Deployment => log errors In File | Table And Return the same view with error message
+                    //logger.LogError(ex.Message);
+                    return View(viewModel);
+
+
+                }
+            }
+        }
+
+        #endregion
+
+        #region Delete
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (!id.HasValue) return BadRequest();
+
+            var dept = _departmentService.GetById(id.Value);
+            if (dept is null) return NotFound();
+
+            return View(dept);
+        }
+        
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if(id == 0 ) return BadRequest();
+            try
+            {
+                bool isDeleted = _departmentService.DeleteDepartment(id);
+
+                if (isDeleted) return RedirectToAction(nameof(Index));
+                else ModelState.AddModelError(string.Empty, "Department cannot be deleted");
+                
+                return RedirectToAction(nameof(Delete),new { id });
+
+            }
+            catch (Exception ex)
+            {
+                // Log Exception
+                if (_environment.IsDevelopment())
+                {
+                    //1)Development => log error in Console And Return The Same View with error message 
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    //2)Deployment => log errors In File | Table And Return the same view with error message
+                    //logger.LogError(ex.Message);
+                    return View("ErrorView");
+                }
             }
         }
         #endregion
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using Demo.DAL.Data.Contexts;
+using Demo.DAL.Models.DepartmentModel;
 
 namespace Demo.DAL.Repositories
 {

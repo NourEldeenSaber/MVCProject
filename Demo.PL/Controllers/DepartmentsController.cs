@@ -70,5 +70,21 @@ namespace Demo.PL.Controllers
 
 
         #endregion
+
+        #region Details
+
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            if (!id.HasValue) return BadRequest(); //400
+            
+            var department = _departmentService.GetById(id.Value);
+            if (department is null) return NotFound();//404
+
+            return View(department);
+
+        }
+
+        #endregion
     }
 }

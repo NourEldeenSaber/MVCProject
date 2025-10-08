@@ -1,3 +1,4 @@
+using Demo.BLL.MappingProfiles;
 using Demo.BLL.Services.Classes;
 using Demo.BLL.Services.Interfaces;
 using Demo.DAL.Data.Contexts;
@@ -36,6 +37,9 @@ namespace Demo.PL
 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IEmployeesService, EmployeeService>();
+
+            //builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+            builder.Services.AddAutoMapper(Mapper => Mapper.AddProfile(new MappingProfiles()));
 
             #endregion
 

@@ -1,5 +1,7 @@
-﻿using Demo.BLL.DTOs.EmployeeDtos;
+﻿using AutoMapper;
+using Demo.BLL.DTOs.EmployeeDtos;
 using Demo.BLL.Services.Interfaces;
+using Demo.DAL.Models.EmployeeModel;
 using Demo.DAL.Repositories.Interfaces;
 
 
@@ -8,70 +10,61 @@ namespace Demo.BLL.Services.Classes
     public class EmployeeService : IEmployeesService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeService(IEmployeeRepository employeeRepository) {
-            _employeeRepository = employeeRepository;   
+        private readonly IMapper _mapper;
+
+        public EmployeeService(IEmployeeRepository employeeRepository , IMapper mapper) {
+            _employeeRepository = employeeRepository;
+            _mapper = mapper;
         }
 
         public IEnumerable<EmployeeDto> GetAllEmployees(bool withTraking = false)
         {
             var employee = _employeeRepository.GetAll();
-            var employeesDto = employee.Select(e => new EmployeeDto { 
-                
-                Id = e.Id,
-                Name = e.Name,
-                Age = e.Age,
-                Salary = e.Salary,
-                Email = e.Email,
-                EmployeeType = e.EmployeeType.ToString(),
-                Gender = e.Gender.ToString(),
-                IsActive = e.IsActive,
+            /// var employeesDto = employee.Select(e => new EmployeeDto { 
+            ///     Id = e.Id,
+            ///     Name = e.Name,
+            ///     Age = e.Age,
+            ///     Salary = e.Salary,
+            ///     Email = e.Email,
+            ///     EmployeeType = e.EmployeeType.ToString(),
+            ///     Gender = e.Gender.ToString(),
+            ///     IsActive = e.IsActive,
+            /// });
 
-            });
-            
-            return employeesDto;
+            //                       Destination         source
+            return _mapper.Map<IEnumerable<EmployeeDto>>(employee);
+            //var employeeDto = _mapper.Map<IEnumerable<Employee> , IEnumerable<EmployeeDto>>(employee);
+
         }
 
         public EmployeeDetailsDto? GetEmployeeById(int id)
         {
             var employee = _employeeRepository.GetById(id);
-            if(employee == null) return null;
-            var employeeDetailsDto = new EmployeeDetailsDto()
-            {
-                Id = id,
-                Name = employee.Name,
-                Age = employee.Age,
-                Salary = employee.Salary,
-                Email = employee.Email,
-                Gender = employee.Gender.ToString(),
-                IsActive = employee.IsActive,
-                EmployeeType = employee.EmployeeType.ToString(),
-                Address = employee.Address,
-                CreatedBy = employee.CreatedBy,
-                CreatedOn = employee.CreatedOn,
-                PhoneNumber = employee.PhoneNumber,
-                LastModifiedBy = employee.LastModifiedBy,
-                LastModifiedOn = employee.LastModifiedOn,
-                HiringDate = DateOnly.FromDateTime(employee.HiringDate)
-            };
             
-            return employeeDetailsDto;
+            return employee is null ? null : _mapper.Map<EmployeeDetailsDto>(employee);
         }
 
         public int AddEmployee(CreatedEmployeeDto employeeDto)
         {
-            throw new NotImplementedException();
+            var employee = _mapper.Map<Employee>(employeeDto);
+            return _employeeRepository.Add(employee);
+        }
+
+        public int UpdateEmployee(UpdatedEmployeeDto employeeDto)
+        {
+            var employee = _mapper.Map<Employee>(employeeDto);
+            return _employeeRepository.Update(employee);
         }
 
         public bool DeleteEmployee(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        
-
-        public int UpdateEmployee(UpdatedEmployeeDto employeeDto)
-        {
-            throw new NotImplementedException();
+            var employee = _employeeRepository.GetById(id);
+            if (employee is null) return false;
+            else
+            {
+                employee.IsDeleted = true;
+                return _employeeRepository.Update(employee) > 0 ? true : false; 
+            }
         }
     }
 }

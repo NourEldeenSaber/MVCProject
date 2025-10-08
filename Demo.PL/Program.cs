@@ -1,4 +1,5 @@
-using Demo.BLL.Services;
+using Demo.BLL.Services.Classes;
+using Demo.BLL.Services.Interfaces;
 using Demo.DAL.Data.Contexts;
 using Demo.DAL.Repositories.Classes;
 using Demo.DAL.Repositories.Interfaces;
@@ -32,6 +33,9 @@ namespace Demo.PL
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IEmployeesService, EmployeeService>();
 
             #endregion
 

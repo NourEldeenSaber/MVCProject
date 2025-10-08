@@ -1,6 +1,7 @@
-﻿using Demo.BLL.DTOs;
+﻿using Demo.BLL.DTOs.DepartmentDtos;
 
-namespace Demo.BLL.Services
+
+namespace Demo.BLL.Services.Interfaces
 {
     public interface IDepartmentService
     {

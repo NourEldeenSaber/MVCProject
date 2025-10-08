@@ -1,11 +1,9 @@
-﻿using Demo.BLL.DTOs;
-using Demo.BLL.Factories;
-using Demo.DAL.Data.Contexts;
-using Demo.DAL.Models;
+﻿using Demo.BLL.Factories;
+using Demo.BLL.Services.Interfaces;
 using Demo.DAL.Repositories.Interfaces;
-using System.Transactions;
+using Demo.BLL.DTOs.DepartmentDtos;
 
-namespace Demo.BLL.Services
+namespace Demo.BLL.Services.Classes
 {
     public class DepartmentService(IDepartmentRepository _departmentRepository) : IDepartmentService
     {

@@ -1,4 +1,4 @@
-﻿using Demo.BLL.DTOs;
+﻿using Demo.BLL.DTOs.DepartmentDtos;
 using Demo.DAL.Models.DepartmentModel;
 using System.Runtime.CompilerServices;
 

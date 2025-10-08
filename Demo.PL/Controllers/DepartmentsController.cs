@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Demo.BLL.Services;
 using Demo.BLL.DTOs;
 using Demo.DAL.Models;
 using Demo.PL.ViewModels.DepartmentViewModels;
 using Demo.PL.ViewModels;
+using Demo.BLL.Services.Interfaces;
 
 namespace Demo.PL.Controllers
 {

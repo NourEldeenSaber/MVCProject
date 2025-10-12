@@ -1,5 +1,5 @@
-﻿using Demo.BLL.DTOs;
-using Demo.DAL.Models;
+﻿using Demo.BLL.DTOs.DepartmentDtos;
+using Demo.DAL.Models.DepartmentModel;
 using System.Runtime.CompilerServices;
 
 namespace Demo.BLL.Factories
